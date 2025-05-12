@@ -83,7 +83,37 @@ class ItemController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        try {
+            $item = Item::findOrFail($id);
+
+            $request->validate([
+                'name' => 'required|string',
+                'sku' => 'required|string|unique:items,sku,' . $item->id,
+                'unit' => 'required|string',
+                'price' => 'required|numeric|min:0',
+                'stock_quantity' => 'required|integer|min:0',
+                'created_by' => 'required'
+            ]);
+
+            $item->update($request->all());
+
+            return response()->json([
+                'message' => 'Item updated successfully',
+                'item' => $item,
+            ]);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json(['errors' => $e->errors()], 422);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json(['message' => 'Item not found.'], 404);
+
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => 'Something went wrong. Please try again.',
+                'error' => $th->getMessage()
+            ], 500);
+        }
+
     }
 
     /**
@@ -91,6 +121,17 @@ class ItemController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            $item = Item::findOrFail($id);
+            $item->delete();
+            return response()->json(['message' => 'Item deleted successfully.']);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json(['message' => 'Item not found.'], 404);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => 'Something went wrong. Please try again.',
+                'error' => $th->getMessage()
+            ], 500);
+        }
     }
 }
