@@ -30,7 +30,6 @@ class ItemSeeder extends Seeder
                 'unit' => $unit,
                 'price' => $faker->randomFloat(2, 5, 100),
                 'stock_quantity' => $faker->numberBetween(0, 100),
-                'created_by' => 1,
                 'created_at' => now(),
                 'updated_at' => now()
             ]);

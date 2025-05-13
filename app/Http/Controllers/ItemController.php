@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ItemRequest;
 use App\Models\Item;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -37,23 +38,8 @@ class ItemController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(ItemRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string',
-            'sku' => 'required|string|unique:items',
-            'unit' => 'required|string',
-            'price' => 'required|numeric|min:0',
-            'stock_quantity' => 'required|integer|min:0',
-            'created_by' => 'required'
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'errors' => $validator->errors()
-            ], 422);
-        }
-
         $item = Item::create($request->all());
 
         return response()->json([
@@ -81,19 +67,10 @@ class ItemController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(ItemRequest $request, string $id)
     {
         try {
             $item = Item::findOrFail($id);
-
-            $request->validate([
-                'name' => 'required|string',
-                'sku' => 'required|string|unique:items,sku,' . $item->id,
-                'unit' => 'required|string',
-                'price' => 'required|numeric|min:0',
-                'stock_quantity' => 'required|integer|min:0',
-                'created_by' => 'required'
-            ]);
 
             $item->update($request->all());
 
@@ -102,11 +79,8 @@ class ItemController extends Controller
                 'item' => $item,
             ]);
 
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            return response()->json(['errors' => $e->errors()], 422);
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             return response()->json(['message' => 'Item not found.'], 404);
-
         } catch (\Throwable $th) {
             return response()->json([
                 'message' => 'Something went wrong. Please try again.',

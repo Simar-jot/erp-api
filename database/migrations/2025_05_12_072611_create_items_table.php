@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('unit');
             $table->decimal('price');
             $table->integer('stock_quantity')->default(0);
-            $table->foreignId('created_by')->constrained('users', 'id');
             $table->timestamps();
         });
     }

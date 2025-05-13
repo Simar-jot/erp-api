@@ -12,6 +12,5 @@ class Item extends Model
         'unit',
         'price',
         'stock_quantity',
-        'created_by'
     ];
 }
