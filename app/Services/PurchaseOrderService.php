@@ -41,13 +41,12 @@ class PurchaseOrderService{
     }
 
     public function summary(){
-        $purchaseOrder = PurchaseOrder::select(['id','status'])->get();
         $summary = [
             'total_items' => Item::count(),
-            'total_purchase_orders' => $purchaseOrder->count(),
-            'approved_orders' => $purchaseOrder->where('status', 'approved')->count(),
-            'rejected_orders' => $purchaseOrder->where('status', 'rejected')->count(),
-            'pending_orders' => $purchaseOrder->where('status', 'pending')->count(),
+            'total_purchase_orders' => PurchaseOrder::count(),
+            'approved_orders' => PurchaseOrder::where('status', 'approved')->count(),
+            'rejected_orders' => PurchaseOrder::where('status', 'rejected')->count(),
+            'pending_orders' => PurchaseOrder::where('status', 'pending')->count(),
             'total_stock_value' => Item::sum(DB::raw('price * stock_quantity')),
         ];
         return $summary;

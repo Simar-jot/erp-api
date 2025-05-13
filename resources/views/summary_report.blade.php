@@ -16,7 +16,7 @@
                 <tr>
                     @foreach ($summary as $key => $item)
                         <tr>
-                            <td>{{ $key }}</td>
+                            <td>{{ ucwords(str_replace('_', ' ', $key)) }}</td>
                             <td>{{ $item }}</td>
                         </tr>
                     @endforeach

@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Exports\SummaryExport;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Services\PurchaseOrderService;
 
 class ReportingController extends Controller
@@ -19,7 +21,6 @@ class ReportingController extends Controller
     }
 
     public function exportSummaryToCSV(){
-        $summary = (new PurchaseOrderService)->summary();
-        dd($summary);
+        return Excel::download(new SummaryExport, 'summary_report.csv');
     }
 }

@@ -20,7 +20,7 @@ class AdminSeeder extends Seeder
                 ['email' => $admin['email']],
                 [
                     'name' => $admin['name'],
-                    'password' => Hash::make($admin['password']), 
+                    'password' => Hash::make($admin['password']),
                     'role' => $admin['role'],
                 ]
             );
@@ -33,9 +33,15 @@ class AdminSeeder extends Seeder
             [
                 'name' => 'admin',
                 'email' => 'admin@gmail.com',
-                'password' => 'Admin@123', // raw password
+                'password' => 'Admin@123',
                 'role' => 'admin',
-            ]
+            ],
+            [
+                'name' => 'staff',
+                'email' => 'staff@gmail.com',
+                'password' => 'Staff@123',
+                'role' => 'staff',
+            ],
         ];
     }
 }

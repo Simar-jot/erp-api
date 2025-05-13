@@ -3,9 +3,11 @@
 namespace App\Repositories;
 
 use App\Models\Item;
+use App\Models\User;
 use App\Models\PurchaseOrder;
 use App\Models\PurchaseOrderItem;
 use Illuminate\Support\Facades\DB;
+use App\Notifications\PurchaseOrderNotification;
 
 class PurchaseOrderRepository{
 
@@ -33,7 +35,7 @@ class PurchaseOrderRepository{
             }
 
             DB::commit();
-
+            $this->sendNotification($purchaseOrder);
             return [
                 'status' => true, 'message' => 'Purchase Order Created Successfully',
                 'code' => 200, 'purchaseOrder' => $purchaseOrder->load('purchaseOrderItems.item')
@@ -43,7 +45,7 @@ class PurchaseOrderRepository{
             return ['status' => false, 'message' => $th->getMessage(), 'code' => 400 ];
         }
     }
-    
+
     public function approve($id){
         try {
             $purchaseOrder = PurchaseOrder::with('purchaseOrderItems')->findOrFail($id);
@@ -92,6 +94,13 @@ class PurchaseOrderRepository{
             return response()->json(['message' => 'Purchase Order not found.'], 404);
         } catch (\Throwable $th) {
             return ['message' => $th->getMessage(), 'code' => 500];
+        }
+    }
+
+    public function sendNotification($purchaseOrder){
+        $admins = User::where('role', 'admin')->get();
+        foreach ($admins as $admin) {
+            $admin->notify(new PurchaseOrderNotification($purchaseOrder));
         }
     }
 }
