@@ -60,4 +60,11 @@ class RegisterController extends Controller
             'message' => 'Invalid credentials',
         ], 401);
     }
+
+    public function logout(Request $request){
+        $request->user()->currentAccessToken()->delete();
+        return response()->json([
+            'message' => 'Logged out successfully.'
+        ]);
+    }
 }
