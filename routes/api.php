@@ -23,4 +23,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/reports/summary',[ReportingController::class, 'summary']);
     Route::get('/reports/summary/pdf', [ReportingController::class, 'exportSummaryToPDF']);
     Route::get('/reports/summary/csv', [ReportingController::class, 'exportSummaryToCSV']);
+    Route::post('/logout', [RegisterController::class, 'logout']);
 });
